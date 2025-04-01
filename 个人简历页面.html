@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人简历</title>
+    <style>
+        #ice-container > div:first-child > div:first-child {
+            display: none;
+        }
+        :root {
+            --primary-color: #2563eb;
+            --text-color: #1f2937;
+            --bg-color: #ffffff;
+            --card-bg: #f3f4f6;
+            --hover-color: #dbeafe;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #60a5fa;
+            --text-color: #f3f4f6;
+            --bg-color: #1f2937;
+            --card-bg: #374151;
+            --hover-color: #1e40af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 导航栏样式 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: var(--bg-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* 新的个人信息卡片样式 */
+        .hero {
+            padding-top: 80px;
+            min-height: auto;
+            margin-bottom: 2rem;
+        }
+
+        .profile-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .profile-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .profile-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .profile-card p {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        /* 修改后的核心能力样式 */
+        .skills-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .skill-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .skill-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .skill-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* 工作经历时间线 */
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .timeline-item {
+            margin-left: 2rem;
+            padding: 1rem;
+            border-left: 2px solid var(--primary-color);
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0; /* 调整为顶部对齐 */
+            width: 14px;
+            height: 14px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+        }
+
+        .timeline-description h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            margin-top: 1rem; /* 增加小标题与上文之间的间隔 */
+        }
+
+        .timeline-description p {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* 主题切换按钮 */
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* 联系方式卡片样式 */
+        .contact-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .contact-card strong {
+            font-weight: bold;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .profile-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item {
+                margin-left: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container container">
+            <h1>Logo</h1>
+            <div class="nav-links">
+                <a href="#about">关于我</a>
+                <a href="#experience">工作经历</a>
+                <a href="#skills">对应技能</a>
+                <a href="#contact">联系方式</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="about" class="hero">
+            <div class="profile-cards">
+                <div class="profile-card">
+                    <h3>个人信息</h3>
+                    <p>彭大地</p>
+                    <p>运营工作年限：7年</p>
+                </div>
+                <div class="profile-card">
+                    <h3>擅长方向</h3>
+                    <p>用户增长活动</p>
+                    <p>新产品冷启动</p>
+                </div>
+                <div class="profile-card">
+                    <h3>学历信息</h3>
+                    <p>北京工商大学嘉华学院-证券投资（财务管理方向）</p>
+                    <p>本科、2011-2015</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience">
+            <h2>工作经历</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3 style="margin-bottom: 0.5rem;">北京有鱼科技有限公司 云锋金融（00376.HK）</h3>
+                    <p style="margin-bottom: 1rem;">2018.7-2021.10 运营经理</p>
+                    <div class="timeline-description">
+                        <h4>用户及活动</h4>
+                        <p>负责线上线下活动策划、执行及复盘，活动类型包括准上市公司团开（海底捞上市前累计入金超3亿港币），各类邀请机制活动（入金成本低于200港币），新功能推广及时效热点类活动（热门新股导流、碎骨等）。</p>
+                        <p>渠道日常维护及拓展，解决渠道及其用户需求反馈，调整渠道政策及拓展合作形式。</p>
+                        <p>跟踪竞品各类增长运营活动及渠道政策变化，调整合作渠道优惠政策及各运营活动细节。</p>
+                        <p>根据各端用户后台数据，应用市场接入数据，投放平台、官方社交媒体数据定期生成用户画像报告，定期汇总用户需求及后续产品落地跟进。</p>
+                        
+                        <h4>产品及数据</h4>
+                        <p>各版本、各端常规发版工作，包括发版文案、推广稿件、应用商店宣发等。</p>
+                        <p>根据各端用户后台数据，应用市场接入数据，投放平台、官方社交媒体数据定期生成用户画像报告，定期汇总用户需求及后续产品落地跟进。</p>
+                        <p>产品BUG反馈收集，定期同步运营需求池，处理用户、渠道产品使用、活动参与过程中各类突发问题并提供临时解决方案。</p>
+                        <p>数据中心、有鱼股票PC端、付费订阅产品的竞品调研及内容合作对接及产品落地推进工作。</p>
+                        
+                        <h4>其他</h4>
+                        <p>各运营相关数据后台维护及数据管理，渠道及活动政策配置。</p>
+                        <p>官方服务号稿件及应用市场推广文案。</p>
+                        <p>活动宣发及品牌曝光推广宣传，第三方服务商对接沟通等。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <h3 style="margin-bottom: 0.5rem;">北京理想财富科技发展有限公司 理想论坛</h3>
+                    <p style="margin-bottom: 1rem;">2015-2018 运营经理</p>
+                    <div class="timeline-description">
+                        <h4>股票社区 (注册用户350万+，日均UV 9万 +，日均PV 65万+ 日均IP 8万+)</h4>
+                        <p>社区管理、内容审核，基于内容质量重新制定及调整内容审核准则；针对各板块规则，用户等级、积分体系的搭建及优化，各板块内广告及合作资源流量分配；</p>
+                        <p>策划执行包括模拟炒股比赛、股民线下交流会、炒股工具改装赛、实盘公开赛、老兵回归（优质用户回流）等运营活动，在论坛日活低谷阶段通过股票指标、股票软件等核心板块重点运营激活老用户超过10万+（连续3日登陆+UCG产出），新增30万+注册；</p>
+                        <p>重新组建论坛管理团队及调整管理机制；</p>
+                        <p>推动搭建论坛及资讯首页的数据及管理后台，收集整理论坛改版升级需求，用户日常产品反馈，论坛移动化的前期筹备工作。处理论坛日常各类BUG反馈，跟进修复流程等；</p>
+                        
+                        <h4>股票直播 （日均 UV 3.9万、 PV 23万 日均IP 2万+）</h4>
+                        <p>从零开始搭建股市直播间，通过招募竞品播主，培养论坛内KOC转化为早期种子用户，制定招募标准，播主管理守则等基础设施开始搭建直播间，在职期间招募近100位股票播主，其中超过50%均连续3个月创造收入，离职时直播间常驻播主200人以上，成立以来注册播主800人以上，全平台用户月均充值280万+；</p>
+                        <p>负责直播间整体营收情况，根据付费转化率、付费规模、行情变化等因素制定平台价格策略及播主流量分配，外部导流合作，流量交换等，提升平台整体内容质量及增加直播相关业务收入；</p>
+                        <p>策划直播间日常促活拉新活动，组织策划各形式促销节日，博主、用户定期线下见面会等，制定激励计划，辅助播主内容产出、外部宣传、建立长期粉丝交流机制；</p>
+                        <p>各官方社群的运营工作，包括活动推广、用户答疑、产品BUG收集反馈等；</p>
+                        
+                        <h4>其他</h4>
+                        <p>各官方社交媒体日常运营维护；</p>
+                        <p>付费问答产品的搭建及初期运营；</p>
+                        <p>处理用户纠纷及投诉，各付费产品的售后环节优化</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <h3>实习经历及其他</h3>
+                    <p></p>
+                    <div class="timeline-description">
+                        <p>&nbsp;</p> <!-- 添加空行 -->
+                        <p>界面新闻（能源）实习生</p>
+                        <p>火柴APP内容运营</p>
+                        <p>21年离职后与朋友合伙海鲜批发（主要是卖生蚝）</p>
+                    </div>
+                </div>
+                
+                <!-- 添加更多工作经历 -->
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2>对应技能</h2>
+            <div class="skills-container">
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-icon">1</div>
+                            <h3>A股、港股领域产品运营及增长活动策划</h3>
+                        </div>
+                        <p>长期负责产品日常改版升级的运营端需求以及增长活动的策划及执行，处理用户反馈，形成可执行的用户需求推进产品升级，处理用户纠纷及外部服务供应商对接等。</p>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-icon">2</div>
+                            <h3>社区运营及问答类产品从零搭建</h3>
+                        </div>
+                        <p>股票论坛及A股文字直播社区的日常运营维护，用户增长活动，股票问答类社区从零启动</p>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-icon">3</div>
+                            <h3>A股、港股领域内容输出，自有社群维护</h3>
+                        </div>
+                        <p>负责公众号等社交平台账号内容撰写，产品内订阅类撰写及资讯首页的编辑工作，各类自有社群日常内容更新及活跃度维护，外部平台导流宣传等</p>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-icon">4</div>
+                            <h3>用户数据分析及渠道维护扩展</h3>
+                        </div>
+                        <p>定期输出运营数据报表及不同阶段用户画像报告，日常外部流量购买及内部自有流量分配，各类拓展渠道日常维护及扩充</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>联系方式</h2>
+            <div class="contact-card">
+                <p><strong>电子邮箱：</strong> bigbigdbigbigdd@hotmail.com</p>
+                <p><strong>电话：</strong> 186-1283-6023</p>
+                <!-- 添加更多联系方式 -->
+            </div>
+        </section>
+    </main>
+
+    <button class="theme-toggle" onclick="toggleTheme()">切换主题</button>
+
+    <script>
+        // 主题切换功能
+        function toggleTheme() {
+            const body = document.documentElement;
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // 滚动时导航栏效果
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > lastScroll) {
+                nav.style.transform = 'translateY(-100%)';
+            } else {
+                nav.style.transform = 'translateY(0)';
+            }
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
+
+
+
